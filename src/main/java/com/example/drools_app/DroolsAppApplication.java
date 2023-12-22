@@ -15,11 +15,11 @@ import java.util.List;
 @SpringBootApplication
 @RequiredArgsConstructor
 @Slf4j
-public class DroosAppApplication implements CommandLineRunner {
+public class DroolsAppApplication implements CommandLineRunner {
 
     private final RegistrationScoreService registrationScoreService;
     public static void main(String[] args) {
-        SpringApplication.run(DroosAppApplication.class, args);
+        SpringApplication.run(DroolsAppApplication.class, args);
     }
 
     @Override
