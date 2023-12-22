@@ -11,7 +11,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class DroolsConfig {
-    private static final String drlFile = "rules/registration-rule.drl";
+//    private static final String drlFile = "rules/registration-rule.drl";
+//    private static final String drlFile = "rules/score_rules.xls";
+    private static final String drlFile = "rules/customer-rules.xlsx";
     private static final KieServices kieServices = KieServices.Factory.get();
 
     @Bean

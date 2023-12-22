@@ -15,7 +15,7 @@ private KieContainer kieContainer;
 public Long calculateFare(RequestDTO requestDTO) {
     Score score = new Score();
     KieSession kieSession = kieContainer.newKieSession();
-    kieSession.setGlobal("score", score);
+//    kieSession.setGlobal("score", score);
     kieSession.insert(requestDTO);
     kieSession.fireAllRules();
     kieSession.dispose();
