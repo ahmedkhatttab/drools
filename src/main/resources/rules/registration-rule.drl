@@ -1,0 +1,29 @@
+import com.example.drools_app.model.RequestDTO;
+import com.example.drools_app.model.StakeholderDTO;
+global com.example.drools_app.model.Score score;
+
+dialect "mvel"
+
+rule "CompanyType Rule"
+    when
+        RequestDTO(companyType.getId == 1)
+    then
+        System.out.println("------------- Add 10% for CompanyType ---------------");
+        score.calcScore(10);
+    end
+
+rule "OwnedByParentCompany Rule"
+    when
+        RequestDTO(ownedByParentCompany==true)
+    then
+        System.out.println("------------- Add 5% for OwnedByParentCompany ---------------");
+        score.calcScore(5);
+    end
+
+rule "Owners Nationality Rule"
+    when
+        RequestDTO($owner: owners) StakeholderDTO(nationality == "egypt" || nationality == "sa") from $owner
+    then
+        System.out.println("------------- Add 7% for Owners Nationality ---------------");
+        score.calcScore(7);
+    end
