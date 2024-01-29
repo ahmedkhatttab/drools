@@ -27,3 +27,196 @@ rule "Owners Nationality Rule"
         System.out.println("------------- Add 7% for Owners Nationality ---------------");
         score.calcScore(7);
     end
+
+
+
+import sa.site.clp.orm.entity.ClassificationRequest;
+import sa.site.clp.orm.entity.ClassificationRequestDet;
+import sa.site.clp.orm.entity.VendorClassificationQuestion;
+import sa.site.clp.orm.entity.constant.EQuestionType;
+import java.lang.Integer;
+import sa.site.clp.service.ClassificationRequestService;
+
+global com.fasterxml.jackson.databind.ObjectMapper objectMapper;
+
+dialect "mvel"
+
+rule "CyberSecurityServices Quest >10 Rule"
+    when
+    // $q = list of requestDet
+        ClassificationRequest($q: questions)
+    // RequestDet represents the matched one
+        $specialDet: ClassificationRequestDet(
+            question.questionType==EQuestionType.SPECIAL_CS_LIST && cybersecurityServices.size() > 10
+        ) from $q
+    then
+         System.out.println("------------- RULE >10 APPLIED---------------");
+         $specialDet.setAnswerScore(100);
+    end
+
+rule "CyberSecurityServices Quest between 7:10 Rule"
+    when
+        ClassificationRequest($q: questions)
+        $specialDet: ClassificationRequestDet(
+            question.questionType==EQuestionType.SPECIAL_CS_LIST &&
+            eval(cybersecurityServices.size() >= 7 && cybersecurityServices.size() <= 10)
+        ) from $q
+    then
+         System.out.println("------------- RULE 7:10 APPLIED---------------");
+         $specialDet.setAnswerScore(80);
+    end
+
+rule "CyberSecurityServices Quest between 5:6 Rule"
+    when
+        ClassificationRequest($q: questions)
+        $specialDet: ClassificationRequestDet(
+            question.questionType==EQuestionType.SPECIAL_CS_LIST &&
+            eval(cybersecurityServices.size() >= 5 && cybersecurityServices.size() <= 6)
+        ) from $q
+    then
+         System.out.println("------------- RULE 5:6 APPLIED---------------");
+         $specialDet.setAnswerScore(60);
+    end
+
+rule "CyberSecurityServices Quest between 3:4 Rule"
+    when
+        ClassificationRequest($q: questions)
+        $specialDet: ClassificationRequestDet(
+            question.questionType==EQuestionType.SPECIAL_CS_LIST &&
+            eval(cybersecurityServices.size() >= 3 && cybersecurityServices.size() <= 4)
+        ) from $q
+    then
+         System.out.println("------------- RULE 3:4 APPLIED---------------");
+         $specialDet.setAnswerScore(40);
+    end
+
+rule "CyberSecurityServices Quest between 1:2 Rule"
+    when
+        ClassificationRequest($q: questions)
+        $specialDet: ClassificationRequestDet(
+            question.questionType==EQuestionType.SPECIAL_CS_LIST &&
+            eval(cybersecurityServices.size() >= 1 && cybersecurityServices.size() <= 2)
+        ) from $q
+    then
+         System.out.println("------------- RULE 1:2 APPLIED---------------");
+         $specialDet.setAnswerScore(20);
+    end
+
+
+
+rule "Security and data compliance"
+    when
+        ClassificationRequest($q: questions)
+        $specialDet: ClassificationRequestDet(question.questionType==EQuestionType.NUMBER) from $q
+    then
+         System.out.println("------------- Security and data compliance ---------------");
+         Integer userAnswerAsInteger = objectMapper.convertValue($specialDet.getUserAnswer(), Integer.class);
+         $specialDet.setAnswerScore(userAnswerAsInteger);
+    end
+
+
+
+rule "No Of CS Experts Quest > 1750 Rule"
+    when
+        ClassificationRequest($q: questions)
+        $specialDet: ClassificationRequestDet(
+            question.questionType==EQuestionType.SPECIAL_PERCENT &&
+            ClassificationRequestService.calcCsExpertPercent($specialDet) > 1750
+        ) from $q
+    then
+         System.out.println("------------- RULE > 1750 APPLIED---------------");
+         $specialDet.setAnswerScore(100);
+    end
+
+rule "No Of CS Experts Quest between 701 and 1750 Rule"
+    when
+        ClassificationRequest($q: questions)
+        $specialDet: ClassificationRequestDet(
+            question.questionType==EQuestionType.SPECIAL_PERCENT &&
+            eval(ClassificationRequestService.calcCsExpertPercent($specialDet)>=701 &&
+            ClassificationRequestService.calcCsExpertPercent($specialDet) <= 1750)
+        ) from $q
+    then
+         System.out.println("------------- RULE between 701 and 1750 APPLIED---------------");
+         $specialDet.setAnswerScore(80);
+    end
+
+rule "No Of CS Experts Quest between 351 and 700 Rule"
+    when
+        ClassificationRequest($q: questions)
+        $specialDet: ClassificationRequestDet(
+            question.questionType==EQuestionType.SPECIAL_PERCENT &&
+            eval(ClassificationRequestService.calcCsExpertPercent($specialDet)>=351 &&
+            ClassificationRequestService.calcCsExpertPercent($specialDet) <= 700)
+        ) from $q
+    then
+         System.out.println("------------- RULE between 351 and 700 APPLIED---------------");
+         $specialDet.setAnswerScore(60);
+    end
+
+rule "No Of CS Experts Quest between 141 and 350 Rule"
+    when
+        ClassificationRequest($q: questions)
+        $specialDet: ClassificationRequestDet(
+            question.questionType==EQuestionType.SPECIAL_PERCENT &&
+            eval(ClassificationRequestService.calcCsExpertPercent($specialDet)>=141 &&
+            ClassificationRequestService.calcCsExpertPercent($specialDet) <= 350)
+        ) from $q
+    then
+         System.out.println("------------- RULE between 141 and 350 APPLIED---------------");
+         $specialDet.setAnswerScore(40);
+    end
+
+rule "No Of CS Experts Quest between 71 and 140 Rule"
+    when
+        ClassificationRequest($q: questions)
+        $specialDet: ClassificationRequestDet(
+            question.questionType==EQuestionType.SPECIAL_PERCENT &&
+            eval(ClassificationRequestService.calcCsExpertPercent($specialDet)>=71 &&
+            ClassificationRequestService.calcCsExpertPercent($specialDet) <= 140)
+        ) from $q
+    then
+         System.out.println("------------- RULE between 71 and 140 APPLIED---------------");
+         $specialDet.setAnswerScore(20);
+    end
+
+rule "No Of CS Experts Quest between 0 and 70 Rule"
+    when
+        ClassificationRequest($q: questions)
+        $specialDet: ClassificationRequestDet(
+            question.questionType==EQuestionType.SPECIAL_PERCENT &&
+            eval(ClassificationRequestService.calcCsExpertPercent($specialDet)>=0 &&
+            ClassificationRequestService.calcCsExpertPercent($specialDet) <= 70)
+        ) from $q
+    then
+         System.out.println("------------- RULE between 0 and 70 APPLIED---------------");
+         $specialDet.setAnswerScore(0);
+    end
+
+
+rule "Binary Quest Rule"
+    when
+        ClassificationRequest($q: questions)
+        $specialDet: ClassificationRequestDet(question.questionType==EQuestionType.BOOLEAN) from $q
+    then
+         System.out.println("------------- Binary Quest RULE---------------");
+         Boolean userAnswerAsBoolean = objectMapper.convertValue($specialDet.getUserAnswer(), Boolean.class);
+          if(userAnswerAsBoolean==true){
+            System.out.println("------------- TRUE ---------------");
+            $specialDet.setAnswerScore(100);
+          } else{
+            System.out.println("------------- FALSE ---------------");
+            $specialDet.setAnswerScore(0);
+         }
+    end
+
+
+
+rule "Dropdown Quest Rule"
+    when
+        ClassificationRequest($q: questions)
+        $specialDet: ClassificationRequestDet(question.questionType==EQuestionType.DROPDOWN) from $q
+    then
+         System.out.println("------------- Dropdown Quest RULE---------------");
+         $specialDet.setAnswerScore(ClassificationRequestService.getDropDownQuestWeight($specialDet));
+    end
